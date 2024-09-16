@@ -11,9 +11,7 @@ public class HtmlPageReader {
         var fullFileName = "pages/".concat(filename);
         try {
             ClassLoader classLoader = getClass().getClassLoader();
-
             var file = new File(Objects.requireNonNull(classLoader.getResource(fullFileName)).getFile()).toPath();
-
             return new String(Files.readAllBytes(file));
         } catch (IOException e) {
             throw new RuntimeException(e);
