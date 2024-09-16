@@ -80,17 +80,20 @@ public class ConnectionHandler {
     }
 
     private void checkForUnsupportedMethods(final BufferedWriter outputStreamWriter, String[] startLineTokens) throws IOException {
-        if (!"GET".equals(startLineTokens[0])) {
+        // Controleer of het verzoek GET of POST is
+        if (!"GET".equals(startLineTokens[0]) && !"POST".equals(startLineTokens[0])) {
             outputStreamWriter.write(generateHeader(HTTP_STATUS_501, null));
             outputStreamWriter.newLine();
             outputStreamWriter.flush();
         }
     }
 
+
     private void checkForUnsupportedHTTPVersions(final BufferedWriter outputStreamWriter, String[] startLineTokens) throws IOException {
         if (!"HTTP/1.1".equals(startLineTokens[2])) {
             outputStreamWriter.write(generateHeader(HTTP_STATUS_505, null));
             outputStreamWriter.newLine();
+            outputStreamWriter.flush();
             outputStreamWriter.flush();
         }
     }
@@ -123,7 +126,7 @@ public class ConnectionHandler {
                 .replace("{{HTTP_STATUS}}", status);
 
 
-        header = header.replace("{{CONTENT_LENGTH}}", Integer.toString(90));
+        header = setContentLength(header, filename);
 
         System.out.println("-> Responded with the following HTTP-headers:");
         System.out.println(header);
